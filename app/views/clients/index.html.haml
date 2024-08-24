@@ -1,0 +1,80 @@
+%div.mx-auto.px-6
+  / Modal toggle
+  .block.space-y-4.md:flex.md:space-y-0.md:space-x-4.rtl:space-x-reverse
+    %button.text-blue-700.hover:text-white.border.border-blue-700.hover:bg-blue-800.focus:ring-4.focus:outline-none.focus:ring-blue-300.font-medium.rounded-lg.text-sm.px-5.text-center.dark:border-blue-500.dark:text-blue-500.dark:hover:text-white.dark:hover:bg-blue-500.dark:focus:ring-blue-800{class: "py-2.5", "data-modal-target" => "crud-modal", "data-modal-toggle" => "crud-modal", type: "button"}
+      Новый клиент
+
+    = link_to "Обновить", refresh_clients_path, class: "text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 text-center dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800 py-2.5"
+
+    = link_to "Отключение", check_expired_clients_clients_path, class: "text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900 py-2.5"
+
+  %h1.text-2xl.font-bold.mb-4.text-center Список клиентов
+  .border-2.border-gray-200.border-dashed.rounded-lg.dark:border-gray-700
+    .relative.overflow-x-auto.shadow-md.sm:rounded-lg
+      %table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400
+        %thead.text-xs.text-gray-700.uppercase.bg-gray-50.dark:bg-gray-700.dark:text-gray-400
+          %tr
+            %th.px-6.py-3{:scope => "col"}
+              = sort_link(@q, :id, "ID")
+            %th.px-6.py-3{:scope => "col"}
+              UUID
+            %th.px-6.py-3{:scope => "col"}
+              = sort_link(@q, :name, "Имя")
+            %th.px-6.py-3{:scope => "col"}
+              = sort_link(@q, :address, "IP")
+            %th.px-6.py-3{:scope => "col"}
+              = sort_link(@q, :enabled, "Состояние")
+            %th.px-6.py-3{:scope => "col"}
+              В сети
+            %th.px-6.py-3{:scope => "col"}
+              = sort_link(@q, :expires_at, "Срок действия")
+            %th.px-6.py-3{:scope => "col"}
+              %span.sr-only Edit
+        %tbody
+          - @clients.each do |client|
+            %tr.bg-white.border-b.dark:bg-gray-800.dark:border-gray-700.hover:bg-gray-50.dark:hover:bg-gray-600
+              %th.px-6.py-4.font-medium.text-gray-900.whitespace-nowrap.dark:text-white{:scope => "row"}
+                = link_to client.id, client_path(client.id)
+              %td.px-6.py-4
+                = link_to client.uuid, client_path(client.id)
+              %td.px-6.py-4
+                = client.name
+              %td.px-6.py-4
+                = client.address
+              %td.px-6.py-4.text-center.align-middle
+                - if client.enabled
+                  %div.border.border-green-500.p-2.rounded
+                    = client.enabled
+                - else
+                  %div.border.border-red-500.p-2.rounded
+                    = client.enabled
+
+              %td.px-6.py-4
+                - if client.latest_handshake_at.present?
+                  = "#{time_ago_in_words(client.latest_handshake_at)} назад"
+              %td.px-6.py-4
+                - if client.expires_at.present?
+                  = client.expires_at.strftime("%d.%m.%Y")
+
+              %td.mx-auto.px-6
+                .flex
+                  %button.text-yellow-400.hover:text-white.border-yellow-400.hover:bg-yellow-500.focus:ring-4.focus:outline-none.w-12.h-12.flex.justify-center.items-center.focus:ring-yellow-300.font-medium.rounded-lg.text-sm.text-center.dark:border-yellow-300.dark:text-yellow-300.dark:hover:text-white.dark:hover:bg-yellow-400.dark:focus:ring-yellow-900{"data-modal-target" => "editModal-#{client.id}", "data-modal-toggle" => "editModal-#{client.id}", type: "button"}
+                    %svg.dark:text-white{"aria-hidden" => "true", class: "w-[25px] h-[25px]", fill: "none", viewbox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg"}
+                      %path{d: "m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z", stroke: "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "1.2"}
+
+                  = render partial: 'clients/modals/modal_edit', locals: { client: client }
+
+                  %button.text-indigo-700.hover:text-white.border-indigo-700.hover:bg-indigo-800.focus:ring-4.focus:outline-none.w-12.h-12.flex.justify-center.items-center.focus:ring-indigo-300.font-medium.rounded-lg.text-sm.text-center.dark:border-indigo-500.dark:text-indigo-500.dark:hover:text-white.dark:hover:bg-indigo-500.dark:focus:ring-indigo-800{"data-client-id" => client.id, type: "button", onclick: "showQrCodeModal(this)"}
+                    %svg.dark:text-white{"aria-hidden" => "true", class: "w-[25px] h-[25px]", fill: "none", viewbox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg"}
+                      %path{d: "M4 4h6v6H4V4Zm10 10h6v6h-6v-6Zm0-10h6v6h-6V4Zm-4 10h.01v.01H10V14Zm0 4h.01v.01H10V18Zm-3 2h.01v.01H7V20Zm0-4h.01v.01H7V16Zm-3 2h.01v.01H4V18Zm0-4h.01v.01H4V14Z", stroke: "currentColor", "stroke-linejoin" => "round", "stroke-width" => "1.2"}
+                      %path{d: "M7 7h.01v.01H7V7Zm10 10h.01v.01H17V17Z", stroke: "currentColor", "stroke-linejoin" => "round", "stroke-width" => "1.2"}
+
+                  = link_to configuration_client_path(client), class: "download-config-button text-green-400 hover:text-white border-green-400 hover:bg-green-500 focus:ring-4 focus:outline-none w-12 h-12 flex justify-center items-center focus:ring-green-300 font-medium rounded-lg text-sm text-center dark:border-green-300 dark:text-green-300 dark:hover:text-white dark:hover:bg-green-400 dark:focus:ring-green-900", download: true do
+                    %svg.dark:text-white{"aria-hidden" => "true", class: "w-[25px] h-[25px]", fill: "none", viewbox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg"}
+                      %path{d: "M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01", stroke: "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "1.2"}
+
+      = paginate @clients
+
+= render partial: 'clients/modals/modal'
+= render partial: 'clients/modals/modal_qr'
+

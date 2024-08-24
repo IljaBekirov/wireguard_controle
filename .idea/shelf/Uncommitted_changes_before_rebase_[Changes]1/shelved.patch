@@ -1,0 +1,40 @@
+Index: app/views/kaminari/_paginator.html.haml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/views/kaminari/_paginator.html.haml b/app/views/kaminari/_paginator.html.haml
+new file mode 100644
+--- /dev/null	(date 1724538253863)
++++ b/app/views/kaminari/_paginator.html.haml	(date 1724538253863)
+@@ -0,0 +1,30 @@
++.p-12
++  %nav{"aria-label" => "Page navigation", class: "flex justify-center mt-4"}
++    %ul.inline-flex.items-center.space-x-1.text-sm.font-medium
++      - unless @clients.first_page?
++        %li
++          = link_to raw('&laquo;&laquo;'), url_for(page: 1),
++          class: "px-4 py-2 bg-white border border-gray-300 text-gray-500 rounded-l-lg hover:bg-gray-100 hover:text-gray-700"
++
++        %li
++          = link_to raw('&laquo;'), url_for(page: @clients.prev_page), class: "px-4 py-2 bg-white border border-gray-300 text-gray-500 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 transition ease-in-out duration-150"
++
++      - (1..@clients.total_pages).each do |page|
++        %li
++          - if page == @clients.current_page
++            - if @clients.first_page?
++              = link_to page, "#", class: "px-4 py-2 bg-blue-500 text-white border border-blue-500 rounded-md shadow-sm rounded-l-lg"
++            - else
++              - if @clients.last_page?
++                = link_to page, "#", class: "px-4 py-2 bg-blue-500 text-white border border-blue-500 rounded-md shadow-sm rounded-r-lg"
++              - else
++                = link_to page, "#", class: "px-4 py-2 bg-blue-500 text-white border border-blue-500 rounded-md shadow-sm"
++          - else
++            = link_to page, url_for(page: page), class: "px-4 py-2 bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-md transition ease-in-out duration-150"
++
++      - unless @clients.last_page?
++        %li
++          = link_to raw('&raquo;'), url_for(page: @clients.next_page), class: "px-4 py-2 bg-white border border-gray-300 text-gray-500 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 transition ease-in-out duration-150"
++
++        %li
++          = link_to raw('&raquo;&raquo;'), url_for(page: @clients.total_pages), class: "px-4 py-2 bg-white border border-gray-300 text-gray-500 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 transition ease-in-out duration-150"

@@ -1,0 +1,56 @@
+%div.mx-auto.px-6
+  %div.bg-white.shadow-xl.rounded-lg.overflow-hidden
+    %div.bg-gradient-to-r.from-blue-500.to-indigo-600.p-6
+      %h1.text-4xl.font-bold.text-white Client Details
+
+    %div.p-6
+      %div.grid.grid-cols-1.sm:grid-cols-2.gap-6.mb-6
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 Name:
+          %p.text-xl.text-gray-900.font-medium= @client.name
+
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 ID:
+          %p.text-xl.text-gray-900= @client.id
+
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 Address:
+          %p.text-xl.text-gray-900= @client.address
+
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 UUID:
+          %p.text-xl.text-gray-900= @client.uuid
+
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 downloadable_config:
+          %p.text-sm.text-gray-900.break-all= @client.downloadable_config
+
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 Enabled:
+          %p.text-xl.text-gray-900
+            = @client.enabled ? 'Да' : 'Нет'
+
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 Created At:
+          %p.text-xl.text-gray-900= @client.created_at.strftime('%Y-%m-%d %H:%M:%S')
+
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 Updated At:
+          %p.text-xl.text-gray-900= @client.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+
+        - if @client.latest_handshake_at.present?
+          %div
+            %h2.text-lg.font-semibold.text-gray-600 Был в сети:
+            %p.text-xl.text-gray-900
+              = "#{time_ago_in_words(@client.latest_handshake_at)} назад"
+
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 Transfer RX:
+          %p.text-xl.text-gray-900= number_to_human_size(@client.transfer_rx)
+
+        %div
+          %h2.text-lg.font-semibold.text-gray-600 Transfer TX:
+          %p.text-xl.text-gray-900= number_to_human_size(@client.transfer_tx)
+
+    %div.bg-gray-100.px-6.py-4.text-right
+      = link_to 'Back to Clients', clients_path, class: 'inline-block.bg-indigo-500.hover:bg-indigo-700.text-white.font-bold.py-2.px-4.rounded.shadow-lg.transition.transform.hover:-translate-y-0.5'
