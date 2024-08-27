@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RefreshClients
   include ApplicationHelper
   include Interactor
@@ -18,9 +20,7 @@ class RefreshClients
         transfer_tx: human_readable_size(item['transferTx'])
       )
 
-      unless client.save
-        context.fail!(error: client.errors.full_messages.join(', '))
-      end
+      context.fail!(error: client.errors.full_messages.join(', ')) unless client.save
     end
   end
 end

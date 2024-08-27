@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'httparty'
 require 'redis'
 
@@ -17,7 +19,7 @@ class WireguardService
 
   def logged_in?
     session_data["authenticated"]
-  rescue => e
+  rescue StandardError => e
     raise WireguardServiceError, "Failed to check login status: #{e.message}"
   end
 
@@ -106,7 +108,7 @@ class WireguardService
 
   def handle_request_errors
     yield
-  rescue => e
+  rescue StandardError => e
     raise WireguardServiceError, "#{e.class} request failed: #{e.message}"
   end
 

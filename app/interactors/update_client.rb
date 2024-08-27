@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateClient
   include Interactor
 
@@ -13,9 +15,9 @@ class UpdateClient
   private
 
   def update_client_attributes
-    unless context.client.update(context.client_params)
-      context.fail!(error: context.client.errors.full_messages.join(', '))
-    end
+    return if context.client.update(context.client_params)
+
+    context.fail!(error: context.client.errors.full_messages.join(', '))
   end
 
   def handle_client_status_change

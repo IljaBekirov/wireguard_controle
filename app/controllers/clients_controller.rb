@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClientsController < ApplicationController
   before_action :set_server_service
   before_action :set_client, only: %i[edit show update qr_code configuration]
@@ -30,11 +32,10 @@ class ClientsController < ApplicationController
     result = UpdateClient.call(client: @client, server_service: @server_service, client_params: client_params)
     if result.success?
       flash[:success] = 'Клиент обновлен успешно'
-      redirect_to clients_path
     else
       flash[:error] = result.error
-      redirect_to clients_path
     end
+    redirect_to clients_path
   end
 
   def refresh
