@@ -2,6 +2,10 @@ class UpdateClient
   include Interactor
 
   def call
+    name = "#{context.client_params['category']}#{context.client_params['name']}"
+    context.client_params[:name] = name
+    context.client_params.delete(:category)
+
     update_client_attributes
     handle_client_status_change if context.client.errors.empty?
   end

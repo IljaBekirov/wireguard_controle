@@ -69,7 +69,7 @@ class ClientsController < ApplicationController
   private
 
   def client_params
-    params.require(:client).permit(:name, :uuid, :enabled, :expires_at, :description)
+    params.require(:client).permit(:name, :uuid, :enabled, :expires_at, :description, :category)
   end
 
   def set_server_service

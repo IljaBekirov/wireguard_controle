@@ -5,12 +5,13 @@ class CreateClient
     server_service = context.server_service
     client_params = context.client_params
 
-    server_service.create_client(client_params[:name])
-    client_web = server_service.get_clients.find { |client| client['name'] == client_params[:name] }
+    name = client_params[:category] + client_params[:name]
+    server_service.create_client(name)
+    client_web = server_service.get_clients.find { |client| client['name'] == name }
 
     client = Client.new(uuid: client_web['id'])
     client.assign_attributes(
-      name: client_web['name'],
+      name: name,
       address: client_web['address'],
       enabled: client_web['enabled'],
       downloadable_config: client_web['downloadableConfig'],
